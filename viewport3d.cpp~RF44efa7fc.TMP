@@ -29,8 +29,6 @@ Viewport3D::Viewport3D(QWidget *parent)
 {
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
-
-    m_selectHandler = std::make_unique<SelectHandler>(this);
 }
 
 void Viewport3D::AddCube(float width, float height, float depth)
@@ -128,24 +126,21 @@ void Viewport3D::mousePressEvent(QMouseEvent *event)
         return;
     }
 
+    if (event->button() == Qt::LeftButton)
+    {
+        auto picked = PickObject(event->pos());
 
-    m_selectHandler->OnMousePress(event);
+        // сбрасываем выделение у ВСЕХ объектов перед новым выбором
+        for (auto &[id, obj] : m_objects)
+            obj->selected = false;
 
-    // if (event->button() == Qt::LeftButton)
-    // {
-    //     auto picked = PickObject(event->pos());
+        if (picked) picked->selected = true;
 
-    //     // сбрасываем выделение у ВСЕХ объектов перед новым выбором
-    //     for (auto &[id, obj] : m_objects)
-    //         obj->selected = false;
+        update();
 
-    //     if (picked) picked->selected = true;
-
-    //     update();
-
-    //     qDebug() << "picked:" << (picked ? "found" : "nothing");
-    // }
-    if (event->button() == Qt::RightButton)
+        qDebug() << "picked:" << (picked ? "found" : "nothing");
+    }
+    else if (event->button() == Qt::RightButton)
     {
         m_rotating = true;
         m_lastMousePos = event->pos(); // запоминаем стартовую точку

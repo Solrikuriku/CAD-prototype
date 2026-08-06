@@ -11,21 +11,25 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    iviewportcontext.cpp \
     main.cpp \
     mainwindow.cpp \
     mesh.cpp \
     meshfactory.cpp \
     raycasting.cpp \
     sceneobject.cpp \
+    selecthandler.cpp \
     viewport3d.cpp
 
 HEADERS += \
     geometry.h \
+    iviewportcontext.h \
     mainwindow.h \
     mesh.h \
     meshfactory.h \
     raycasting.h \
     sceneobject.h \
+    selecthandler.h \
     transform.h \
     viewport3d.h
 

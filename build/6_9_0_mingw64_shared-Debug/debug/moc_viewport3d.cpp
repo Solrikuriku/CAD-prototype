@@ -81,6 +81,8 @@ void *Viewport3D::qt_metacast(const char *_clname)
         return static_cast<void*>(this);
     if (!strcmp(_clname, "QOpenGLFunctions_3_3_Core"))
         return static_cast< QOpenGLFunctions_3_3_Core*>(this);
+    if (!strcmp(_clname, "IViewportContext"))
+        return static_cast< IViewportContext*>(this);
     return QOpenGLWidget::qt_metacast(_clname);
 }
 

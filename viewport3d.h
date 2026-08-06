@@ -14,15 +14,34 @@
 #include "raycasting.h"
 #include "sceneobject.h"
 #include "meshfactory.h"
+#include "iviewportcontext.h"
+#include "selecthandler.h"
 
 class Viewport3D : public QOpenGLWidget,
-                   protected QOpenGLFunctions_3_3_Core
+                   protected QOpenGLFunctions_3_3_Core,
+                   public IViewportContext
 {
     Q_OBJECT
 
 public:
     Viewport3D(QWidget* parent = nullptr);
+
     void AddCube(float width = 0.5f, float height = 0.5f, float depth = 0.5f);
+
+    SceneObject* PickObject(const QPointF& currentPos) const override;
+    inline void SetPickedObject(SceneObject* picked) override
+    {
+        if (m_pickedObject && m_pickedObject != picked)
+        {
+            m_pickedObject->selected = false;
+        }
+
+        if (picked)
+        {
+            m_pickedObject = picked;
+            m_pickedObject->selected = true;
+        }
+    };
 
 protected:
     void initializeGL() override;
@@ -72,6 +91,7 @@ private:
     //а есть смысл в хэш с id?
     // std::vector<std::unique_ptr<SceneObject>> m_objects;
     std::unordered_map<std::string, std::unique_ptr<SceneObject>> m_objects;
+    std::unique_ptr<SelectHandler> m_selectHandler;
 
     QOpenGLShaderProgram m_program;
     QMatrix4x4 m_projection;
@@ -89,8 +109,20 @@ private:
     //СЛЕДИТЬ ЗА ВРЕМЕНЕМ ЖИЗНИ
     //а вообще это наблюдатель
     //есть смысл объединить в m_pickedObject
-    SceneObject* m_transformObject = nullptr;
+    SceneObject* m_pickedObject = nullptr;
 
-    SceneObject* PickObject(const QPointF& currentPos);
+    //метод для отмены всех выделений
+    inline void CancelAllSelections()
+    {
+        for (auto &[id, obj] : m_objects)
+        {
+            if (!obj) continue;
+
+            if (obj->selected)
+                obj->selected = false;
+        }
+    }
+
+    // SceneObject* PickObject(const QPointF& currentPos) const override;
     QVector3D GetCursorWorldPos(const QPointF& currentPos, const QVector3D& objectPos, const QMatrix4x4& currentView, const TransformAxes axes);
 };

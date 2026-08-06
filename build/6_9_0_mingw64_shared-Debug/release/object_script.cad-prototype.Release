@@ -1,0 +1,11 @@
+release/iviewportcontext.o
+release/main.o
+release/mainwindow.o
+release/mesh.o
+release/meshfactory.o
+release/raycasting.o
+release/sceneobject.o
+release/selecthandler.o
+release/viewport3d.o
+release/moc_mainwindow.o
+release/moc_viewport3d.o
