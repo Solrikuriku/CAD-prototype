@@ -130,6 +130,7 @@ void Viewport3D::mousePressEvent(QMouseEvent *event)
 
 
     m_selectHandler->OnMousePress(event);
+    update();
 
     // if (event->button() == Qt::LeftButton)
     // {
@@ -179,7 +180,7 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event)
         auto& objectRotate = m_pickedObject->transform.rotation;
         auto currentPos = event->pos();
 
-        auto newCursorWorldPos = GetCursorWorldPos(currentPos, objectPos, m_currentView, m_axes);
+        auto newCursorWorldPos = GetCursorWorldPos(currentPos, objectPos, m_axes);
 
         QVector3D rotatePlane;
 
@@ -200,7 +201,7 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event)
 
         auto& objectPos = m_pickedObject->transform.position;
         auto currentPos = event->pos();
-        auto new_cursorWorldPos = GetCursorWorldPos(currentPos, objectPos, m_currentView, m_axes);
+        auto new_cursorWorldPos = GetCursorWorldPos(currentPos, objectPos, m_axes);
         auto delta3D = new_cursorWorldPos - m_cursorWorldPos;
         float scaleSensitivity = 2.0f;
 
@@ -223,27 +224,31 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event)
     }
     else if (m_translate_mode == TranslateMode::Move)
     {
-        if (!m_pickedObject) return;
 
-        auto& objectPos = m_pickedObject->transform.position;
-        auto currentPos = event->pos();
+        m_translateCommand->OnMouseMove(event);
 
-        m_cursorWorldPos = GetCursorWorldPos(currentPos, objectPos, m_currentView, m_axes);
 
-        if (m_axes == TransformAxes::X)
-        {
-            objectPos.setX(m_cursorWorldPos.x());
-        }
-        else if (m_axes == TransformAxes::Y)
-        {
-            objectPos.setY(m_cursorWorldPos.y());
-        }
-        else if (m_axes == TransformAxes::Z)
-        {
-            objectPos.setZ(m_cursorWorldPos.z());
-        }
+        // if (!m_pickedObject) return;
 
-        //m_lastDragPos = currentPos;
+        // auto& objectPos = m_pickedObject->transform.position;
+        // auto currentPos = event->pos();
+
+        // m_cursorWorldPos = GetCursorWorldPos(currentPos, objectPos, m_axes);
+
+        // if (m_axes == TransformAxes::X)
+        // {
+        //     objectPos.setX(m_cursorWorldPos.x());
+        // }
+        // else if (m_axes == TransformAxes::Y)
+        // {
+        //     objectPos.setY(m_cursorWorldPos.y());
+        // }
+        // else if (m_axes == TransformAxes::Z)
+        // {
+        //     objectPos.setZ(m_cursorWorldPos.z());
+        // }
+
+        // //m_lastDragPos = currentPos;
     }
 
     update();
@@ -311,7 +316,7 @@ void Viewport3D::keyPressEvent(QKeyEvent *event)
 
         m_rotate_mode = RotateMode::Rotate;
 
-        m_cursorWorldPos = GetCursorWorldPos(mapFromGlobal(QCursor::pos()), m_pickedObject->transform.position, m_currentView, m_axes);
+        m_cursorWorldPos = GetCursorWorldPos(mapFromGlobal(QCursor::pos()), m_pickedObject->transform.position, m_axes);
 
         return;
     }
@@ -349,7 +354,7 @@ void Viewport3D::keyPressEvent(QKeyEvent *event)
 
         m_scale_mode = ScaleMode::Scale;
 
-        m_cursorWorldPos = GetCursorWorldPos(mapFromGlobal(QCursor::pos()), m_pickedObject->transform.position, m_currentView, m_axes);
+        m_cursorWorldPos = GetCursorWorldPos(mapFromGlobal(QCursor::pos()), m_pickedObject->transform.position, m_axes);
 
         return;
     }
@@ -385,17 +390,12 @@ void Viewport3D::keyPressEvent(QKeyEvent *event)
     {
         //assert(m_translateObject != nullptr);
 
-        if (event->key() == Qt::Key_X)
-            m_axes = TransformAxes::X;
-        else if (event->key() == Qt::Key_Y)
-            m_axes = TransformAxes::Y;
-        else if (event->key() == Qt::Key_Z)
-            m_axes = TransformAxes::Z;
-        else return;
+        ChangeAxes(event);
+        if (m_axes == TransformAxes::None) return;
 
         m_translate_mode = TranslateMode::Move;
-
-        m_cursorWorldPos = GetCursorWorldPos(mapFromGlobal(QCursor::pos()), m_pickedObject->transform.position, m_currentView, m_axes);
+        m_translateCommand = std::make_unique<TranslateCommand>(this, m_pickedObject, m_axes);
+        m_cursorWorldPos = GetCursorWorldPos(mapFromGlobal(QCursor::pos()), m_pickedObject->transform.position, m_axes);
 
         return;
     }
@@ -451,7 +451,21 @@ SceneObject* Viewport3D::PickObject(const QPointF &currentPos) const
     return closestObject;
 }
 
-QVector3D Viewport3D::GetCursorWorldPos(const QPointF& currentPos, const QVector3D& objectPos, const QMatrix4x4& currentView, const TransformAxes axes)
+void Viewport3D::SetPickedObject(SceneObject *picked)
+{
+    if (m_pickedObject && m_pickedObject != picked)
+    {
+        m_pickedObject->selected = false;
+    }
+
+    if (picked)
+    {
+        m_pickedObject = picked;
+        m_pickedObject->selected = true;
+    }
+}
+
+QVector3D Viewport3D::GetCursorWorldPos(const QPointF& currentPos, const QVector3D& objectPos, const TransformAxes axes) const
 {
     QVector3D foundCursorPos = { 0.0f, 0.0f, 0.0f };
 
@@ -462,7 +476,7 @@ QVector3D Viewport3D::GetCursorWorldPos(const QPointF& currentPos, const QVector
     plane.normal = QVector3D(0, 0, 1);
 
     //а куда в реальном 3D-мире сейчас направлен этот вектор взгляда (0, 0, -1), с учетом всех наших поворотов камеры
-    QVector3D cameraForward = currentView.inverted().mapVector(QVector3D(0, 0, -1));
+    QVector3D cameraForward = m_currentView.inverted().mapVector(QVector3D(0, 0, -1));
 
     if (axes == TransformAxes::X)
     {

@@ -6,6 +6,7 @@ release/meshfactory.o
 release/raycasting.o
 release/sceneobject.o
 release/selecthandler.o
+release/translatecommand.o
 release/viewport3d.o
 release/moc_mainwindow.o
 release/moc_viewport3d.o

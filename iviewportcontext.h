@@ -1,6 +1,7 @@
 #pragma once
 
 #include "sceneobject.h"
+#include "TransformAxes.h"
 
 /*
  * интерфейс для данных
@@ -16,6 +17,7 @@ public:
     //данные о выбранном объекте
     virtual SceneObject* PickObject(const QPointF& currentPos) const = 0;
     virtual void SetPickedObject(SceneObject* picked) = 0;
+    virtual QVector3D GetCursorWorldPos(const QPointF& currentPos, const QVector3D& objectPos, const TransformAxes axes) const = 0;
 
     //данные о мировой координате
     //данные о камере

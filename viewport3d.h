@@ -10,12 +10,15 @@
 #include <QKeyEvent>
 #include <QHash>
 #include <cassert>
+//решить вопрос с предупреждениями
 #include "algorithm"
 #include "raycasting.h"
 #include "sceneobject.h"
 #include "meshfactory.h"
 #include "iviewportcontext.h"
+#include "TransformAxes.h"
 #include "selecthandler.h"
+#include "translatecommand.h"
 
 class Viewport3D : public QOpenGLWidget,
                    protected QOpenGLFunctions_3_3_Core,
@@ -29,19 +32,8 @@ public:
     void AddCube(float width = 0.5f, float height = 0.5f, float depth = 0.5f);
 
     SceneObject* PickObject(const QPointF& currentPos) const override;
-    inline void SetPickedObject(SceneObject* picked) override
-    {
-        if (m_pickedObject && m_pickedObject != picked)
-        {
-            m_pickedObject->selected = false;
-        }
-
-        if (picked)
-        {
-            m_pickedObject = picked;
-            m_pickedObject->selected = true;
-        }
-    };
+    void SetPickedObject(SceneObject* picked) override;
+    QVector3D GetCursorWorldPos(const QPointF& currentPos, const QVector3D& objectPos, const TransformAxes axes) const override;
 
 protected:
     void initializeGL() override;
@@ -78,10 +70,10 @@ private:
         Scale
     };
 
-    enum class TransformAxes
-    {
-        None, X, Y, Z
-    };
+    // enum class TransformAxes
+    // {
+    //     None, X, Y, Z
+    // };
 
     TranslateMode m_translate_mode = TranslateMode::None;
     RotateMode m_rotate_mode = RotateMode::None;
@@ -92,6 +84,7 @@ private:
     // std::vector<std::unique_ptr<SceneObject>> m_objects;
     std::unordered_map<std::string, std::unique_ptr<SceneObject>> m_objects;
     std::unique_ptr<SelectHandler> m_selectHandler;
+    std::unique_ptr<TranslateCommand> m_translateCommand;
 
     QOpenGLShaderProgram m_program;
     QMatrix4x4 m_projection;
@@ -100,11 +93,13 @@ private:
     float m_cameraDistance = 3.0f;
 
     bool m_rotating = false;      // зажата ли кнопка прямо сейчас
+    bool m_needsRedraw = false;
     QPointF m_lastMousePos = QPointF();        // где была мышь в прошлом событии
     QPointF m_lastDragPos = QPointF();
     QVector3D m_cursorWorldPos = QVector3D(); //позииция в 3д
     float m_yaw = 0.0f;           // поворот вокруг вертикальной оси (влево-вправо)
     float m_pitch = 20.0f;        // поворот вокруг горизонтальной оси (вверх-вниз), начальный наклон для вида "не в лоб"
+
 
     //СЛЕДИТЬ ЗА ВРЕМЕНЕМ ЖИЗНИ
     //а вообще это наблюдатель
@@ -123,6 +118,20 @@ private:
         }
     }
 
+    //пока тут
+
+    inline void ChangeAxes(QKeyEvent* e)
+    {
+        if (e->key() == Qt::Key_X)
+            m_axes = TransformAxes::X;
+        else if (e->key() == Qt::Key_Y)
+            m_axes = TransformAxes::Z;
+        else if (e->key() == Qt::Key_Z)
+            m_axes = TransformAxes::Y;
+        else
+            m_axes = TransformAxes::None;
+    }
+
     // SceneObject* PickObject(const QPointF& currentPos) const override;
-    QVector3D GetCursorWorldPos(const QPointF& currentPos, const QVector3D& objectPos, const QMatrix4x4& currentView, const TransformAxes axes);
+    // QVector3D GetCursorWorldPos(const QPointF& currentPos, const QVector3D& objectPos, const QMatrix4x4& currentView, const TransformAxes axes);
 };

@@ -19,9 +19,11 @@ SOURCES += \
     raycasting.cpp \
     sceneobject.cpp \
     selecthandler.cpp \
+    translatecommand.cpp \
     viewport3d.cpp
 
 HEADERS += \
+    TransformAxes.h \
     geometry.h \
     iviewportcontext.h \
     mainwindow.h \
@@ -31,6 +33,7 @@ HEADERS += \
     sceneobject.h \
     selecthandler.h \
     transform.h \
+    translatecommand.h \
     viewport3d.h
 
 FORMS += \

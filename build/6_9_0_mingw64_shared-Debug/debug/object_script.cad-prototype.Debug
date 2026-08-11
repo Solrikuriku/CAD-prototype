@@ -6,6 +6,7 @@ debug/meshfactory.o
 debug/raycasting.o
 debug/sceneobject.o
 debug/selecthandler.o
+debug/translatecommand.o
 debug/viewport3d.o
 debug/moc_mainwindow.o
 debug/moc_viewport3d.o
