@@ -17,6 +17,8 @@ SOURCES += \
     mesh.cpp \
     meshfactory.cpp \
     raycasting.cpp \
+    rotatecommand.cpp \
+    scalecommand.cpp \
     sceneobject.cpp \
     selecthandler.cpp \
     translatecommand.cpp \
@@ -30,6 +32,8 @@ HEADERS += \
     mesh.h \
     meshfactory.h \
     raycasting.h \
+    rotatecommand.h \
+    scalecommand.h \
     sceneobject.h \
     selecthandler.h \
     transform.h \

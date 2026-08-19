@@ -53,13 +53,25 @@ inline float AngleBetweenVectors(const QVector3D& last, const QVector3D& current
     QVector3D lastDir = (last - objectCenter).normalized();
     QVector3D currentDir = (current - objectCenter).normalized();
 
-    float cosAngle = std::clamp(QVector3D::dotProduct(lastDir, currentDir), -1.0f, 1.0f);
-    float angleDegrees = qRadiansToDegrees(std::acos(cosAngle));
-
     QVector3D axis = QVector3D::crossProduct(lastDir, currentDir);
+    float dot = QVector3D::dotProduct(lastDir, currentDir);
 
-    if (QVector3D::dotProduct(axis, referenceNormal) < 0)
-        angleDegrees = -angleDegrees;
+    // sin-компонента угла — это длина cross, но со знаком относительно нормали плоскости
+    float sinAngle = axis.length();
 
-    return angleDegrees;
+    if (QVector3D::dotProduct(axis, referenceNormal) < 0.0f)
+        sinAngle = -sinAngle;
+
+    float angleRad = std::atan2(sinAngle, dot); // устойчиво во всём диапазоне -180..180
+    return qRadiansToDegrees(angleRad);
+
+    // float cosAngle = std::clamp(QVector3D::dotProduct(lastDir, currentDir), -1.0f, 1.0f);
+    // float angleDegrees = qRadiansToDegrees(std::acos(cosAngle));
+
+    // QVector3D axis = QVector3D::crossProduct(lastDir, currentDir);
+
+    // if (QVector3D::dotProduct(axis, referenceNormal) < 0)
+    //     angleDegrees = -angleDegrees;
+
+    // return angleDegrees;
 }

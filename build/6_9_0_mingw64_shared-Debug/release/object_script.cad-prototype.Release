@@ -4,6 +4,8 @@ release/mainwindow.o
 release/mesh.o
 release/meshfactory.o
 release/raycasting.o
+release/rotatecommand.o
+release/scalecommand.o
 release/sceneobject.o
 release/selecthandler.o
 release/translatecommand.o

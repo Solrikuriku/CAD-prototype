@@ -132,20 +132,6 @@ void Viewport3D::mousePressEvent(QMouseEvent *event)
     m_selectHandler->OnMousePress(event);
     update();
 
-    // if (event->button() == Qt::LeftButton)
-    // {
-    //     auto picked = PickObject(event->pos());
-
-    //     // сбрасываем выделение у ВСЕХ объектов перед новым выбором
-    //     for (auto &[id, obj] : m_objects)
-    //         obj->selected = false;
-
-    //     if (picked) picked->selected = true;
-
-    //     update();
-
-    //     qDebug() << "picked:" << (picked ? "found" : "nothing");
-    // }
     if (event->button() == Qt::RightButton)
     {
         m_rotating = true;
@@ -172,83 +158,17 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event)
         m_pitch = std::clamp(m_pitch, -89.0f, 89.0f);
     }
 
-    if (m_rotate_mode == RotateMode::Rotate)
+    if (m_translate_mode == TranslateMode::Move)
     {
-        if (!m_pickedObject) return;
-
-        auto& objectPos = m_pickedObject->transform.position;
-        auto& objectRotate = m_pickedObject->transform.rotation;
-        auto currentPos = event->pos();
-
-        auto newCursorWorldPos = GetCursorWorldPos(currentPos, objectPos, m_axes);
-
-        QVector3D rotatePlane;
-
-        if (m_axes == TransformAxes::X) rotatePlane = QVector3D(1, 0, 0);
-        else if (m_axes == TransformAxes::Y) rotatePlane = QVector3D(0, 1, 0);
-        else if (m_axes == TransformAxes::Z) rotatePlane = QVector3D(0, 0, 1);
-
-        float angleDegrees = AngleBetweenVectors(m_cursorWorldPos, newCursorWorldPos, objectPos, rotatePlane);
-
-        QQuaternion deltaRotation = QQuaternion::fromAxisAndAngle(rotatePlane, angleDegrees);
-        objectRotate = deltaRotation * objectRotate;
-
-        m_cursorWorldPos = newCursorWorldPos;
+        m_translateCommand->OnMouseMove(event);
+    }
+    else if (m_rotate_mode == RotateMode::Rotate)
+    {
+        m_rotateCommand->OnMouseMove(event);
     }
     else if (m_scale_mode == ScaleMode::Scale)
     {
-        if (!m_pickedObject) return;
-
-        auto& objectPos = m_pickedObject->transform.position;
-        auto currentPos = event->pos();
-        auto new_cursorWorldPos = GetCursorWorldPos(currentPos, objectPos, m_axes);
-        auto delta3D = new_cursorWorldPos - m_cursorWorldPos;
-        float scaleSensitivity = 2.0f;
-
-        auto &scale = m_pickedObject->transform.scaling;
-
-        if (m_axes == TransformAxes::X)
-        {
-            scale.setX(scale.x() + (float)delta3D.x() * scaleSensitivity);
-        }
-        else if (m_axes == TransformAxes::Y)
-        {
-            scale.setY(scale.y() + (float)delta3D.y() * scaleSensitivity);
-        }
-        else if (m_axes == TransformAxes::Z)
-        {
-            scale.setZ(scale.z() + (float)delta3D.z() * scaleSensitivity);
-        }
-
-        m_cursorWorldPos = new_cursorWorldPos;
-    }
-    else if (m_translate_mode == TranslateMode::Move)
-    {
-
-        m_translateCommand->OnMouseMove(event);
-
-
-        // if (!m_pickedObject) return;
-
-        // auto& objectPos = m_pickedObject->transform.position;
-        // auto currentPos = event->pos();
-
-        // m_cursorWorldPos = GetCursorWorldPos(currentPos, objectPos, m_axes);
-
-        // if (m_axes == TransformAxes::X)
-        // {
-        //     objectPos.setX(m_cursorWorldPos.x());
-        // }
-        // else if (m_axes == TransformAxes::Y)
-        // {
-        //     objectPos.setY(m_cursorWorldPos.y());
-        // }
-        // else if (m_axes == TransformAxes::Z)
-        // {
-        //     objectPos.setZ(m_cursorWorldPos.z());
-        // }
-
-        // //m_lastDragPos = currentPos;
+        m_scaleCommand->OnMouseMove(event);
     }
 
     update();
@@ -275,90 +195,6 @@ void Viewport3D::keyPressEvent(QKeyEvent *event)
     //для быстрого чтения
 
     //при нажатии G переходим в режим move
-    if (event->key() == Qt::Key_R)
-    {
-        //объект который можно трансформировать
-        //может быть единственным, может множественным
-        //но пока он единственный
-        //ищем такой объект
-
-        for (auto &[id, obj] : m_objects)
-        {
-            if (obj->selected)
-            {
-                m_pickedObject = obj.get();
-                break;
-            }
-        }
-
-        //если cуществует выделенный объект, то идем дальше
-        //иначе завершаем вызов метода
-
-        if (!m_pickedObject) return;
-
-        m_rotate_mode = RotateMode::Choose;
-
-        return;
-    }
-
-    //я подумаю об объединении
-    if (m_rotate_mode == RotateMode::Choose)
-    {
-        //assert(m_translateObject != nullptr);
-
-        if (event->key() == Qt::Key_X)
-            m_axes = TransformAxes::X;
-        else if (event->key() == Qt::Key_Y)
-            m_axes = TransformAxes::Y;
-        else if (event->key() == Qt::Key_Z)
-            m_axes = TransformAxes::Z;
-        else return;
-
-        m_rotate_mode = RotateMode::Rotate;
-
-        m_cursorWorldPos = GetCursorWorldPos(mapFromGlobal(QCursor::pos()), m_pickedObject->transform.position, m_axes);
-
-        return;
-    }
-
-    if (event->key() == Qt::Key_S)
-    {
-        for (auto &[id, obj] : m_objects)
-        {
-            if (obj->selected)
-            {
-                m_pickedObject = obj.get();
-                break;
-            }
-        }
-
-        if (!m_pickedObject) return;
-
-        m_scale_mode = ScaleMode::Choose;
-
-        return;
-    }
-
-    //я подумаю об объединении
-    if (m_scale_mode == ScaleMode::Choose)
-    {
-        //assert(m_translateObject != nullptr);
-
-        if (event->key() == Qt::Key_X)
-            m_axes = TransformAxes::X;
-        else if (event->key() == Qt::Key_Y)
-            m_axes = TransformAxes::Y;
-        else if (event->key() == Qt::Key_Z)
-            m_axes = TransformAxes::Z;
-        else return;
-
-        m_scale_mode = ScaleMode::Scale;
-
-        m_cursorWorldPos = GetCursorWorldPos(mapFromGlobal(QCursor::pos()), m_pickedObject->transform.position, m_axes);
-
-        return;
-    }
-
     //возможно есть архитектура получше
     if (event->key() == Qt::Key_G)
     {
@@ -386,16 +222,77 @@ void Viewport3D::keyPressEvent(QKeyEvent *event)
         return;
     }
 
+    if (event->key() == Qt::Key_R)
+    {
+        //объект который можно трансформировать
+        //может быть единственным, может множественным
+        //но пока он единственный
+        //ищем такой объект
+
+        for (auto &[id, obj] : m_objects)
+        {
+            if (obj->selected)
+            {
+                m_pickedObject = obj.get();
+                break;
+            }
+        }
+
+        //если cуществует выделенный объект, то идем дальше
+        //иначе завершаем вызов метода
+
+        if (!m_pickedObject) return;
+
+        m_rotate_mode = RotateMode::Choose;
+
+        return;
+    }
+
+    if (event->key() == Qt::Key_S)
+    {
+        for (auto &[id, obj] : m_objects)
+        {
+            if (obj->selected)
+            {
+                m_pickedObject = obj.get();
+                break;
+            }
+        }
+
+        if (!m_pickedObject) return;
+
+        m_scale_mode = ScaleMode::Choose;
+
+        return;
+    }
+
+    ChangeAxes(event);
+    if (m_axes == TransformAxes::None) return;
+
     if (m_translate_mode == TranslateMode::Choose)
     {
-        //assert(m_translateObject != nullptr);
-
-        ChangeAxes(event);
-        if (m_axes == TransformAxes::None) return;
-
         m_translate_mode = TranslateMode::Move;
         m_translateCommand = std::make_unique<TranslateCommand>(this, m_pickedObject, m_axes);
         m_cursorWorldPos = GetCursorWorldPos(mapFromGlobal(QCursor::pos()), m_pickedObject->transform.position, m_axes);
+
+        return;
+    }
+
+    //я подумаю об объединении
+    if (m_rotate_mode == RotateMode::Choose)
+    {
+        m_rotate_mode = RotateMode::Rotate;
+        m_cursorWorldPos = GetCursorWorldPos(mapFromGlobal(QCursor::pos()), m_pickedObject->transform.position, m_axes);
+        m_rotateCommand = std::make_unique<RotateCommand>(this, m_pickedObject, m_axes, m_cursorWorldPos);
+
+        return;
+    }
+
+    if (m_scale_mode == ScaleMode::Choose)
+    {
+        m_scale_mode = ScaleMode::Scale;
+        m_cursorWorldPos = GetCursorWorldPos(mapFromGlobal(QCursor::pos()), m_pickedObject->transform.position, m_axes);
+        m_scaleCommand = std::make_unique<ScaleCommand>(this, m_pickedObject, m_axes, m_cursorWorldPos);
 
         return;
     }
@@ -510,4 +407,3 @@ QVector3D Viewport3D::GetCursorWorldPos(const QPointF& currentPos, const QVector
 
     return foundCursorPos;
 }
-
