@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sceneobject.h"
-#include "TransformAxes.h"
+#include "transformaxes.h"
 
 /*
  * интерфейс для данных

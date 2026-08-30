@@ -1,4 +1,6 @@
 #include "viewport3d.h"
+#include "meshfactory.h"
+#include "raycasting.h"
 
 static const char *vertexShaderSrc =
 R"(
@@ -99,29 +101,18 @@ void Viewport3D::paintGL()
 
 void Viewport3D::mousePressEvent(QMouseEvent *event)
 {
+    auto isAnyModeOn = (m_translate_mode == TranslateMode::Move)
+                       || (m_rotate_mode == RotateMode::Rotate)
+                       || (m_scale_mode == ScaleMode::Scale);
+
     m_rotating = false;
 
-    if (m_translate_mode == TranslateMode::Move)
+    if (isAnyModeOn)
     {
         m_translate_mode = TranslateMode::None;
-        m_axes = TransformAxes::None;
-        m_pickedObject = nullptr;
-
-        return;
-    }
-
-    if (m_rotate_mode == RotateMode::Rotate)
-    {
         m_rotate_mode = RotateMode::None;
-        m_axes = TransformAxes::None;
-        m_pickedObject = nullptr;
-
-        return;
-    }
-
-    if (m_scale_mode == ScaleMode::Scale)
-    {
         m_scale_mode = ScaleMode::None;
+
         m_axes = TransformAxes::None;
         m_pickedObject = nullptr;
 

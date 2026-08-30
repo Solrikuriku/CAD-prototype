@@ -11,12 +11,9 @@
 #include <QHash>
 #include <cassert>
 //решить вопрос с предупреждениями
-#include "algorithm"
-#include "raycasting.h"
 #include "sceneobject.h"
-#include "meshfactory.h"
 #include "iviewportcontext.h"
-#include "TransformAxes.h"
+#include "transformaxes.h"
 #include "selecthandler.h"
 #include "translatecommand.h"
 #include "rotatecommand.h"
@@ -86,6 +83,7 @@ private:
     // std::vector<std::unique_ptr<SceneObject>> m_objects;
     std::unordered_map<std::string, std::unique_ptr<SceneObject>> m_objects;
     std::unique_ptr<SelectHandler> m_selectHandler;
+
     std::unique_ptr<TranslateCommand> m_translateCommand;
     std::unique_ptr<RotateCommand> m_rotateCommand;
     std::unique_ptr<ScaleCommand> m_scaleCommand;

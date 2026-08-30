@@ -11,6 +11,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    gizmocommand.cpp \
     iviewportcontext.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -25,8 +26,8 @@ SOURCES += \
     viewport3d.cpp
 
 HEADERS += \
-    TransformAxes.h \
     geometry.h \
+    gizmocommand.h \
     iviewportcontext.h \
     mainwindow.h \
     mesh.h \
@@ -37,6 +38,7 @@ HEADERS += \
     sceneobject.h \
     selecthandler.h \
     transform.h \
+    transformaxes.h \
     translatecommand.h \
     viewport3d.h
 

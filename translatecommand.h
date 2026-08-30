@@ -2,18 +2,14 @@
 
 #include <QMouseEvent>
 #include "iviewportcontext.h"
+#include "gizmocommand.h"
 
-class TranslateCommand
+class TranslateCommand : public GizmoCommand
 {
-private:
-    IViewportContext* m_cntx = nullptr;
-    SceneObject* m_object = nullptr;
-    TransformAxes m_axes = TransformAxes::None;
-
 public:
     TranslateCommand(IViewportContext* cntx, SceneObject* object, TransformAxes axes)
-        : m_cntx(cntx), m_object(object), m_axes(axes) {};
+        : GizmoCommand(cntx, object, axes) {}
 
-    void OnMouseMove(QMouseEvent* e);
+    void OnMouseMove(QMouseEvent* e) override;
 };
 
