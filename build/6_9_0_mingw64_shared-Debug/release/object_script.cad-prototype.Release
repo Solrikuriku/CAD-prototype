@@ -1,3 +1,4 @@
+release/commandhistory.o
 release/gizmocommand.o
 release/iviewportcontext.o
 release/main.o

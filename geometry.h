@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QVector3D>
+#include <qdebug.h>
 
 struct Ray
 {
@@ -54,15 +55,21 @@ inline float AngleBetweenVectors(const QVector3D& last, const QVector3D& current
     QVector3D currentDir = (current - objectCenter).normalized();
 
     QVector3D axis = QVector3D::crossProduct(lastDir, currentDir);
-    float dot = QVector3D::dotProduct(lastDir, currentDir);
+    float cosAngle = QVector3D::dotProduct(lastDir, currentDir);
 
-    // sin-компонента угла — это длина cross, но со знаком относительно нормали плоскости
+    // Возвращаем вашу длину, она гарантирует, что значение синуса не нулевое
     float sinAngle = axis.length();
 
-    if (QVector3D::dotProduct(axis, referenceNormal) < 0.0f)
+    // ВНИМАНИЕ: Проверьте, что передается в referenceNormal!
+    // Если знак всегда положительный, замените referenceNormal на нужную ось (например, QVector3D(0, 1, 0))
+    if (QVector3D::dotProduct(axis, referenceNormal) < 0.0f) {
         sinAngle = -sinAngle;
+    }
 
-    float angleRad = std::atan2(sinAngle, dot); // устойчиво во всём диапазоне -180..180
+    float angleRad = std::atan2(sinAngle, cosAngle);
+
+    qDebug() << "текущий угол " << angleRad;
+
     return qRadiansToDegrees(angleRad);
 
     // float cosAngle = std::clamp(QVector3D::dotProduct(lastDir, currentDir), -1.0f, 1.0f);

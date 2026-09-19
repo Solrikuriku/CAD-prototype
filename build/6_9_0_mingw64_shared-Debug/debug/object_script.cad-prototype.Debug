@@ -1,3 +1,4 @@
+debug/commandhistory.o
 debug/gizmocommand.o
 debug/iviewportcontext.o
 debug/main.o

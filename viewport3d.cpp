@@ -33,6 +33,7 @@ Viewport3D::Viewport3D(QWidget *parent)
     setMouseTracking(true);
 
     m_selectHandler = std::make_unique<SelectHandler>(this);
+    m_historyStack = std::make_unique<CommandHistory>();
 }
 
 void Viewport3D::AddCube(float width, float height, float depth)
@@ -109,6 +110,11 @@ void Viewport3D::mousePressEvent(QMouseEvent *event)
 
     if (isAnyModeOn)
     {
+        if (m_translate_mode == TranslateMode::Move)
+        {
+            if (m_historyStack) m_historyStack->ExecuteCommand(std::move(m_translateCommand));
+        }
+
         m_translate_mode = TranslateMode::None;
         m_rotate_mode = RotateMode::None;
         m_scale_mode = ScaleMode::None;
@@ -139,7 +145,7 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event)
 
         float sensitivity = 0.3f; // скорость вращения, подбери на глаз
 
-        m_yaw   += delta.x() * sensitivity;
+        m_yaw += delta.x() * sensitivity;
         m_pitch += delta.y() * sensitivity;
 
         // не даём камере "перевернуться" через полюс (стандартная защита для orbit-камеры)
@@ -151,7 +157,7 @@ void Viewport3D::mouseMoveEvent(QMouseEvent *event)
 
     if (m_translate_mode == TranslateMode::Move)
     {
-        m_translateCommand->OnMouseMove(event);
+        if (m_translateCommand) m_translateCommand->OnMouseMove(event);
     }
     else if (m_rotate_mode == RotateMode::Rotate)
     {
@@ -169,13 +175,6 @@ void Viewport3D::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::RightButton && !m_rotating == false)
         m_rotating = false;
-
-    // if (event->button() == Qt::LeftButton && m_mode == TransformMode::Move)
-    // {
-    //     m_mode = TransformMode::None;
-    //     m_axes = TransformAxes::None;
-    //     m_transformObject = nullptr;
-    // }
 }
 
 void Viewport3D::keyPressEvent(QKeyEvent *event)
@@ -258,6 +257,7 @@ void Viewport3D::keyPressEvent(QKeyEvent *event)
     }
 
     ChangeAxes(event);
+
     if (m_axes == TransformAxes::None) return;
 
     if (m_translate_mode == TranslateMode::Choose)

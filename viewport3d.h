@@ -18,6 +18,7 @@
 #include "translatecommand.h"
 #include "rotatecommand.h"
 #include "scalecommand.h"
+#include "commandhistory.h"
 
 class Viewport3D : public QOpenGLWidget,
                    protected QOpenGLFunctions_3_3_Core,
@@ -87,6 +88,11 @@ private:
     std::unique_ptr<TranslateCommand> m_translateCommand;
     std::unique_ptr<RotateCommand> m_rotateCommand;
     std::unique_ptr<ScaleCommand> m_scaleCommand;
+
+    std::unique_ptr<CommandHistory> m_historyStack;
+
+    // std::vector<GizmoCommand> m_undoStack;
+    // std::vector<GizmoCommand> m_redoStack;
 
     QOpenGLShaderProgram m_program;
     QMatrix4x4 m_projection;

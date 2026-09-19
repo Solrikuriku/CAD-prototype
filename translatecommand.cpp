@@ -25,3 +25,17 @@ void TranslateCommand::OnMouseMove(QMouseEvent *e)
         objectPos.setZ(cursorWorldPos.z());
     }
 }
+
+void TranslateCommand::Execute()
+{
+    if (!m_object) return;
+
+    m_currentPos = m_object->transform.position;
+}
+
+void TranslateCommand::Undo()
+{
+    if (!m_object) return;
+
+    m_object->transform.position = m_lastPos;
+}
