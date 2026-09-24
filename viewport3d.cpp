@@ -185,7 +185,16 @@ void Viewport3D::keyPressEvent(QKeyEvent *event)
         if (!m_historyStack) return;
 
         m_historyStack->Undo();
-        update(); // перерисовать сцену с откаченным состоянием
+        update();
+        return;
+    }
+
+    if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_R)
+    {
+        if (!m_historyStack) return;
+
+        m_historyStack->Redo();
+        update();
         return;
     }
 

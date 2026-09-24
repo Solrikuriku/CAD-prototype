@@ -17,6 +17,7 @@ public:
     void OnMouseMove(QMouseEvent* e) override;
     void Execute() override;
     void Undo() override;
+    void Redo() override;
 
 private:
     QVector3D m_lastPos = QVector3D();

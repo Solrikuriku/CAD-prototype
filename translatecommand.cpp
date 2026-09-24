@@ -39,3 +39,11 @@ void TranslateCommand::Undo()
 
     m_object->transform.position = m_lastPos;
 }
+
+void TranslateCommand::Redo()
+{
+    if (!m_object || m_currentPos == QVector3D()) return;
+
+    m_object->transform.position = m_currentPos;
+}
+
