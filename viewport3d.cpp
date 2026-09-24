@@ -179,6 +179,16 @@ void Viewport3D::mouseReleaseEvent(QMouseEvent *event)
 
 void Viewport3D::keyPressEvent(QKeyEvent *event)
 {
+    // проверка на Ctrl+Z — обрати внимание на порядок: сначала модификатор, потом клавиша
+    if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_Z)
+    {
+        if (!m_historyStack) return;
+
+        m_historyStack->Undo();
+        update(); // перерисовать сцену с откаченным состоянием
+        return;
+    }
+
     //проходка по selected так себе
     //мне кажется нужно тут как то подумать насчет этого
     //скорее всего все равно создать контейнер для выделенок
