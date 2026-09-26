@@ -22,5 +22,9 @@ private:
     Ui::MainWindow *ui;
 
     Viewport3D *viewport = nullptr;
+
+    float scale = 100;
+
+    void AddObject();
 };
 #endif // MAINWINDOW_H

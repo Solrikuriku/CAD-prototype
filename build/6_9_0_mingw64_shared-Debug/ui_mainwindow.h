@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
@@ -26,6 +27,9 @@ public:
     QWidget *centralwidget;
     Viewport3D *openGLWidget;
     QPushButton *AddCubeButton;
+    QLineEdit *objectWidth;
+    QLineEdit *objectHeight;
+    QLineEdit *objectDepth;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -33,7 +37,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1217, 758);
+        MainWindow->resize(1266, 758);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         openGLWidget = new Viewport3D(centralwidget);
@@ -41,11 +45,20 @@ public:
         openGLWidget->setGeometry(QRect(10, 20, 1081, 701));
         AddCubeButton = new QPushButton(centralwidget);
         AddCubeButton->setObjectName("AddCubeButton");
-        AddCubeButton->setGeometry(QRect(1110, 20, 90, 29));
+        AddCubeButton->setGeometry(QRect(1110, 20, 141, 29));
+        objectWidth = new QLineEdit(centralwidget);
+        objectWidth->setObjectName("objectWidth");
+        objectWidth->setGeometry(QRect(1120, 70, 113, 28));
+        objectHeight = new QLineEdit(centralwidget);
+        objectHeight->setObjectName("objectHeight");
+        objectHeight->setGeometry(QRect(1120, 110, 113, 28));
+        objectDepth = new QLineEdit(centralwidget);
+        objectDepth->setObjectName("objectDepth");
+        objectDepth->setGeometry(QRect(1120, 150, 113, 28));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1217, 25));
+        menubar->setGeometry(QRect(0, 0, 1266, 25));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
