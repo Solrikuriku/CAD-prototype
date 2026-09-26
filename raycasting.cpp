@@ -27,14 +27,14 @@ Ray RayCasting::ScreenToRay(const QPointF &pos, int width, int height, const QMa
 bool RayCasting::IsRayIntersectsAABB(const Ray &ray, const AABB &box, float &tOut)
 {
     //это для себя пока
-    if (ray.direction.x() == 0)
-        qDebug() << "ray.direction.x == 0";
+    // if (ray.direction.x() == 0)
+    //     qDebug() << "ray.direction.x == 0";
 
-    if (ray.direction.y() == 0)
-        qDebug() << "ray.direction.y == 0";
+    // if (ray.direction.y() == 0)
+    //     qDebug() << "ray.direction.y == 0";
 
-    if (ray.direction.z() == 0)
-        qDebug() << "ray.direction.z == 0";
+    // if (ray.direction.z() == 0)
+    //     qDebug() << "ray.direction.z == 0";
 
     float xMin = (box.min.x() - ray.origin.x()) / ray.direction.x();
     float xMax = (box.max.x() - ray.origin.x()) / ray.direction.x();

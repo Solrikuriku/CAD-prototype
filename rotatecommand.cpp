@@ -24,3 +24,24 @@ void RotateCommand::OnMouseMove(QMouseEvent *e)
 
     m_cursorWorldPos = newCursorWorldPos;
 }
+
+void RotateCommand::Execute()
+{
+    if (!m_object) return;
+
+    m_currentRotation = m_object->transform.rotation;
+}
+
+void RotateCommand::Undo()
+{
+    if (!m_object) return;
+
+    m_object->transform.rotation = m_lastRotation;
+}
+
+void RotateCommand::Redo()
+{
+    if (!m_object || m_currentRotation == QQuaternion()) return;
+
+    m_object->transform.rotation = m_currentRotation;
+}

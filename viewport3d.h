@@ -140,6 +140,16 @@ private:
             m_axes = TransformAxes::None;
     }
 
+    inline void ResetGizmo()
+    {
+        m_translate_mode = TranslateMode::None;
+        m_rotate_mode = RotateMode::None;
+        m_scale_mode = ScaleMode::None;
+
+        m_axes = TransformAxes::None;
+        m_pickedObject = nullptr;
+    }
+
     // SceneObject* PickObject(const QPointF& currentPos) const override;
     // QVector3D GetCursorWorldPos(const QPointF& currentPos, const QVector3D& objectPos, const QMatrix4x4& currentView, const TransformAxes axes);
 };

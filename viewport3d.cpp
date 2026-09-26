@@ -102,29 +102,49 @@ void Viewport3D::paintGL()
 
 void Viewport3D::mousePressEvent(QMouseEvent *event)
 {
-    auto isAnyModeOn = (m_translate_mode == TranslateMode::Move)
-                       || (m_rotate_mode == RotateMode::Rotate)
-                       || (m_scale_mode == ScaleMode::Scale);
+    // auto isAnyModeOn = (m_translate_mode == TranslateMode::Move)
+    //                    || (m_rotate_mode == RotateMode::Rotate)
+    //                    || (m_scale_mode == ScaleMode::Scale);
 
     m_rotating = false;
 
-    if (isAnyModeOn)
+    // if (isAnyModeOn)
+    // {
+    //     if (m_translate_mode == TranslateMode::Move)
+    //     {
+    //         if (m_historyStack) m_historyStack->ExecuteCommand(std::move(m_translateCommand));
+    //     }
+
+
+    //     m_translate_mode = TranslateMode::None;
+    //     m_rotate_mode = RotateMode::None;
+    //     m_scale_mode = ScaleMode::None;
+
+    //     m_axes = TransformAxes::None;
+    //     m_pickedObject = nullptr;
+
+    //     return;
+    // }
+
+    //DRY для команд чот
+    if (m_translate_mode == TranslateMode::Move)
     {
-        if (m_translate_mode == TranslateMode::Move)
-        {
-            if (m_historyStack) m_historyStack->ExecuteCommand(std::move(m_translateCommand));
-        }
-
-        m_translate_mode = TranslateMode::None;
-        m_rotate_mode = RotateMode::None;
-        m_scale_mode = ScaleMode::None;
-
-        m_axes = TransformAxes::None;
-        m_pickedObject = nullptr;
-
+        if (m_historyStack) m_historyStack->ExecuteCommand(std::move(m_translateCommand));
+        ResetGizmo();
         return;
     }
-
+    else if (m_rotate_mode == RotateMode::Rotate)
+    {
+        if (m_historyStack) m_historyStack->ExecuteCommand(std::move(m_rotateCommand));
+        ResetGizmo();
+        return;
+    }
+    else if (m_scale_mode == ScaleMode::Scale)
+    {
+        if (m_historyStack) m_historyStack->ExecuteCommand(std::move(m_scaleCommand));
+        ResetGizmo();
+        return;
+    }
 
     m_selectHandler->OnMousePress(event);
     update();
@@ -179,6 +199,9 @@ void Viewport3D::mouseReleaseEvent(QMouseEvent *event)
 
 void Viewport3D::keyPressEvent(QKeyEvent *event)
 {
+    //кстати здесь слишком большой пробел между переменными
+    //мне не нравится
+
     // проверка на Ctrl+Z — обрати внимание на порядок: сначала модификатор, потом клавиша
     if (event->modifiers() & Qt::ControlModifier && event->key() == Qt::Key_Z)
     {

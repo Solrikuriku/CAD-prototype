@@ -31,3 +31,24 @@ void ScaleCommand::OnMouseMove(QMouseEvent *e)
     m_cursorWorldPos = new_cursorWorldPos;
 }
 
+void ScaleCommand::Execute()
+{
+    if (!m_object) return;
+
+    m_currentScale = m_object->transform.scaling;
+}
+
+void ScaleCommand::Undo()
+{
+    if (!m_object) return;
+
+    m_object->transform.scaling = m_lastScale;
+}
+
+void ScaleCommand::Redo()
+{
+    if (!m_object || m_currentScale == QVector3D()) return;
+
+    m_object->transform.scaling = m_currentScale;
+}
+

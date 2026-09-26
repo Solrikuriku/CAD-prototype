@@ -8,7 +8,7 @@ void CommandHistory::ExecuteCommand(std::unique_ptr<ICommand> cmd)
     m_history.push_back(std::move(cmd));
     CleanRedo();
 
-    qDebug() << "Текущий размер истории:" << m_history.size();
+    //qDebug() << "Текущий размер истории:" << m_history.size();
 }
 
 void CommandHistory::Undo()

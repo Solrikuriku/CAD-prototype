@@ -68,7 +68,7 @@ inline float AngleBetweenVectors(const QVector3D& last, const QVector3D& current
 
     float angleRad = std::atan2(sinAngle, cosAngle);
 
-    qDebug() << "текущий угол " << angleRad;
+    //qDebug() << "текущий угол " << angleRad;
 
     return qRadiansToDegrees(angleRad);
 
