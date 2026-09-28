@@ -176,6 +176,7 @@ release/moc_mainwindow.cpp: ../../mainwindow.h \
 		../../ICommand.h \
 		../../rotatecommand.h \
 		../../scalecommand.h \
+		../../commandhistory.h \
 		release/moc_predefs.h \
 		C:/msys64/mingw64/share/qt6/bin/moc.exe
 	C:\msys64\mingw64\share\qt6\bin\moc.exe $(DEFINES) --include C:/Users/1657434/Desktop/pet-projects/cad-prototype/build/6_9_0_mingw64_shared-Debug/release/moc_predefs.h -IC:/msys64/mingw64/share/qt6/mkspecs/win32-g++ -IC:/Users/1657434/Desktop/pet-projects/cad-prototype -IC:/msys64/mingw64/include/qt6 -IC:/msys64/mingw64/include/qt6/QtOpenGLWidgets -IC:/msys64/mingw64/include/qt6/QtWidgets -IC:/msys64/mingw64/include/qt6/QtOpenGL -IC:/msys64/mingw64/include/qt6/QtGui -IC:/msys64/mingw64/include/qt6/QtCore -I. -IC:/msys64/mingw64/include/c++/14.2.0 -IC:/msys64/mingw64/include/c++/14.2.0/x86_64-w64-mingw32 -IC:/msys64/mingw64/include/c++/14.2.0/backward -IC:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include -IC:/msys64/mingw64/include -IC:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include-fixed ..\..\mainwindow.h -o release\moc_mainwindow.cpp
@@ -193,6 +194,7 @@ release/moc_viewport3d.cpp: ../../viewport3d.h \
 		../../ICommand.h \
 		../../rotatecommand.h \
 		../../scalecommand.h \
+		../../commandhistory.h \
 		release/moc_predefs.h \
 		C:/msys64/mingw64/share/qt6/bin/moc.exe
 	C:\msys64\mingw64\share\qt6\bin\moc.exe $(DEFINES) --include C:/Users/1657434/Desktop/pet-projects/cad-prototype/build/6_9_0_mingw64_shared-Debug/release/moc_predefs.h -IC:/msys64/mingw64/share/qt6/mkspecs/win32-g++ -IC:/Users/1657434/Desktop/pet-projects/cad-prototype -IC:/msys64/mingw64/include/qt6 -IC:/msys64/mingw64/include/qt6/QtOpenGLWidgets -IC:/msys64/mingw64/include/qt6/QtWidgets -IC:/msys64/mingw64/include/qt6/QtOpenGL -IC:/msys64/mingw64/include/qt6/QtGui -IC:/msys64/mingw64/include/qt6/QtCore -I. -IC:/msys64/mingw64/include/c++/14.2.0 -IC:/msys64/mingw64/include/c++/14.2.0/x86_64-w64-mingw32 -IC:/msys64/mingw64/include/c++/14.2.0/backward -IC:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include -IC:/msys64/mingw64/include -IC:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include-fixed ..\..\viewport3d.h -o release\moc_viewport3d.cpp
@@ -218,7 +220,8 @@ ui_mainwindow.h: ../../mainwindow.ui \
 		../../gizmocommand.h \
 		../../ICommand.h \
 		../../rotatecommand.h \
-		../../scalecommand.h
+		../../scalecommand.h \
+		../../commandhistory.h
 	C:\msys64\mingw64\share\qt6\bin\uic.exe ..\..\mainwindow.ui -o ui_mainwindow.h
 
 compiler_yacc_decl_make_all:
@@ -267,7 +270,8 @@ release/main.o: ../../main.cpp ../../mainwindow.h \
 		../../gizmocommand.h \
 		../../ICommand.h \
 		../../rotatecommand.h \
-		../../scalecommand.h
+		../../scalecommand.h \
+		../../commandhistory.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main.o ..\..\main.cpp
 
 release/mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
@@ -284,6 +288,7 @@ release/mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 		../../ICommand.h \
 		../../rotatecommand.h \
 		../../scalecommand.h \
+		../../commandhistory.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\mainwindow.o ..\..\mainwindow.cpp
 
@@ -307,7 +312,8 @@ release/rotatecommand.o: ../../rotatecommand.cpp ../../rotatecommand.h \
 		../../mesh.h \
 		../../geometry.h \
 		../../transformaxes.h \
-		../../gizmocommand.h
+		../../gizmocommand.h \
+		../../ICommand.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\rotatecommand.o ..\..\rotatecommand.cpp
 
 release/scalecommand.o: ../../scalecommand.cpp ../../scalecommand.h \
@@ -317,7 +323,8 @@ release/scalecommand.o: ../../scalecommand.cpp ../../scalecommand.h \
 		../../mesh.h \
 		../../geometry.h \
 		../../transformaxes.h \
-		../../gizmocommand.h
+		../../gizmocommand.h \
+		../../ICommand.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\scalecommand.o ..\..\scalecommand.cpp
 
 release/sceneobject.o: ../../sceneobject.cpp ../../sceneobject.h \
@@ -359,6 +366,7 @@ release/viewport3d.o: ../../viewport3d.cpp ../../viewport3d.h \
 		../../ICommand.h \
 		../../rotatecommand.h \
 		../../scalecommand.h \
+		../../commandhistory.h \
 		../../meshfactory.h \
 		../../raycasting.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\viewport3d.o ..\..\viewport3d.cpp
