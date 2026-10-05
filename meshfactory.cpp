@@ -30,11 +30,11 @@ std::unique_ptr<Mesh> MeshFactory::CreateCube(const float width, const float hei
     return mesh;
 }
 
-std::unique_ptr<Mesh> MeshFactory::CreateCylinder(const float radius, const float height)
+std::unique_ptr<Mesh> MeshFactory::CreateCylinder(const float radius, const float height, const int segments)
 {
-    auto vertices = GenerateVertices(radius, height);
-    auto verticesIncidies = GenerateVerticesIndecies(vertices.size());
-    auto edgesIndicies = GenerateCylinderEdges(vertices.size());
+    auto vertices = GenerateVertices(radius, height, segments);
+    auto verticesIncidies = GenerateCylinderVerticesIndecies(segments);
+    auto edgesIndicies = GenerateCylinderEdgeIndices(segments);
     AABB bounds = AABB::GetBounds(vertices);
     auto mesh = std::make_unique<Mesh>(vertices, verticesIncidies, edgesIndicies);
     mesh->bounds = bounds;
@@ -69,11 +69,14 @@ std::vector<float> MeshFactory::GenerateVertices(const float radius, const float
 
     //или это или то
     //std::vector<QVector3D> vertices;
-    std::vector<float> vertices;
+    //std::vector<float> vertices;
+
+    std::vector<float> topVerts;
+    std::vector<float> bottomVerts;
 
     float radianAngle = TO_RADIANS((360.0f / segments));
-    float zTop = height / 2.0f;
-    float zBottom = -height / 2.0f;
+    float yTop = height / 2.0f;
+    float yBottom = -height / 2.0f;
     //QVector3D coordinatesCircleTop = QVector3D(0.0f, 0.0f, zTop);
     //QVector3D coordinatesCircleBottom = QVector3D(0.0f, 0.0f, zBottom);
 
@@ -82,64 +85,103 @@ std::vector<float> MeshFactory::GenerateVertices(const float radius, const float
     for (int i = 0; i < segments; i++)
     {
         float angle = step * i;
+
         float x = radius * cos(angle);
-        float y = radius * sin(angle);
+        float z = radius * sin(angle);
 
         //auto vertexTop = QVector3D(x, y, zTop);
         //auto vertexBotton = QVector3D(x, y, zBottom);
 
-        vertices.push_back(x);
-        vertices.push_back(y);
-        vertices.push_back(zTop);
+        topVerts.push_back(x);
+        topVerts.push_back(yTop);
+        topVerts.push_back(z);
 
-        vertices.push_back(x);
-        vertices.push_back(y);
-        vertices.push_back(zBottom);
+        bottomVerts.push_back(x);
+        bottomVerts.push_back(yBottom);
+        bottomVerts.push_back(z);
 
         // vertices.push_back(QVector3D(x, y, zTop));
         // vertices.push_back(QVector3D(x, y, zBottom));
     }
 
+    topVerts.insert(topVerts.end(), bottomVerts.begin(), bottomVerts.end());
+    topVerts.push_back(0);
+    topVerts.push_back(yTop);
+    topVerts.push_back(0);
+    topVerts.push_back(0);
+    topVerts.push_back(yBottom);
+    topVerts.push_back(0);
+    qDebug() << "vrtxs" << topVerts;
 
-    return vertices;
+    return topVerts;
 }
 
-std::vector<unsigned int> MeshFactory::GenerateCylinderEdges(const int verticesSize)
+
+std::vector<unsigned int> MeshFactory::GenerateCylinderVerticesIndecies(const int segments)
 {
-    std::vector<unsigned int> edgesIndicies;
+    std::vector<unsigned int> indices;
 
-    for (int i = 0; i < verticesSize; i++)
+    for (int i = 0; i < segments; i++)
     {
-        //жутко
-        if (i == verticesSize - 2)
-        {
-            edgesIndicies.push_back(i);
-            edgesIndicies.push_back(i+1);
-            edgesIndicies.push_back(i);
-            edgesIndicies.push_back(0);
-            edgesIndicies.push_back(i+1);
-            edgesIndicies.push_back(0);
-            edgesIndicies.push_back(1);
-        }
+        // Находим индексы 4-х углов на боковой стенке:
+        int top1 = i;                           // Верхняя левая точка
+        int top2 = (i + 1) % segments;          // Верхняя правая (с замыканием в кольцо)
+        int bottom1 = segments + i;             // Нижняя левая
+        int bottom2 = segments + top2;          // Нижняя правая
 
-        edgesIndicies.push_back(i);
-        edgesIndicies.push_back(i+1);
-        edgesIndicies.push_back(i);
-        edgesIndicies.push_back(i+2);
+        // Первый треугольник (верх-лево, низ-лево, низ-право)
+        indices.push_back(top1);
+        indices.push_back(bottom1);
+        indices.push_back(bottom2);
+
+        // Второй треугольник (верх-лево, низ-право, верх-право)
+        indices.push_back(top1);
+        indices.push_back(bottom2);
+        indices.push_back(top2);
     }
 
-    return edgesIndicies;
+    int topCenterIndex = 2 * segments;
+    int bottomCenterIndex = 2 * segments + 1;
+
+    for (int i = 0; i < segments; i++)
+    {
+        int next_i = (i + 1) % segments;
+
+        // Верхняя крышка (Центр, текущая точка верха, следующая точка верха)
+        indices.push_back(topCenterIndex);
+        indices.push_back(i);
+        indices.push_back(next_i);
+
+        // Нижняя крышка (Центр, текущая точка низа, следующая точка низа)
+        indices.push_back(bottomCenterIndex);
+        indices.push_back(segments + next_i);
+        indices.push_back(segments + i);
+    }
+
+    return indices;
 }
 
-std::vector<unsigned int> MeshFactory::GenerateVerticesIndecies(const int verticesSize)
+std::vector<unsigned int> MeshFactory::GenerateCylinderEdgeIndices(int segments)
 {
-    std::vector<unsigned int> verticiesIndicies;
+    std::vector<unsigned int> edges;
 
-    for (int i = 0; i < verticesSize; i++)
+    for (int i = 0; i < segments; i++)
     {
-        verticiesIndicies.push_back(i);
+        int next_i = (i + 1) % segments;
+
+        // Линия верхнего кольца (от текущей к следующей)
+        edges.push_back(i);
+        edges.push_back(next_i);
+
+        // Линия нижнего кольца
+        edges.push_back(segments + i);
+        edges.push_back(segments + next_i);
+
+        // Вертикальная стойка (соединяем верх и низ)
+        // edges.push_back(i);
+        // edges.push_back(segments + i);
     }
 
-    return verticiesIndicies;
+    return edges;
 }
 

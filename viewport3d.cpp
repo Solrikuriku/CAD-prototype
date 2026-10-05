@@ -49,6 +49,19 @@ void Viewport3D::AddCube(float width, float height, float depth)
     update();
 }
 
+void Viewport3D::AddCylinder(float radius, float height)
+{
+    makeCurrent();
+    auto newObject = std::make_unique<SceneObject>();
+    newObject->mesh = MeshFactory::CreateCylinder(radius, height);
+
+    auto id = newObject->id;
+    m_objects.emplace(id, std::move(newObject));
+
+    doneCurrent();
+    update();
+}
+
 void Viewport3D::initializeGL()
 {
     initializeOpenGLFunctions();

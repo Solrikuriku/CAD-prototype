@@ -30,6 +30,7 @@ public:
     QLineEdit *objectWidth;
     QLineEdit *objectHeight;
     QLineEdit *objectDepth;
+    QPushButton *AddCylinderButton;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -48,13 +49,16 @@ public:
         AddCubeButton->setGeometry(QRect(1110, 20, 141, 29));
         objectWidth = new QLineEdit(centralwidget);
         objectWidth->setObjectName("objectWidth");
-        objectWidth->setGeometry(QRect(1120, 70, 113, 28));
+        objectWidth->setGeometry(QRect(1120, 150, 113, 28));
         objectHeight = new QLineEdit(centralwidget);
         objectHeight->setObjectName("objectHeight");
-        objectHeight->setGeometry(QRect(1120, 110, 113, 28));
+        objectHeight->setGeometry(QRect(1120, 190, 113, 28));
         objectDepth = new QLineEdit(centralwidget);
         objectDepth->setObjectName("objectDepth");
-        objectDepth->setGeometry(QRect(1120, 150, 113, 28));
+        objectDepth->setGeometry(QRect(1120, 230, 113, 28));
+        AddCylinderButton = new QPushButton(centralwidget);
+        AddCylinderButton->setObjectName("AddCylinderButton");
+        AddCylinderButton->setGeometry(QRect(1110, 70, 141, 29));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -73,6 +77,7 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         AddCubeButton->setText(QCoreApplication::translate("MainWindow", "\320\232\321\203\320\261", nullptr));
+        AddCylinderButton->setText(QCoreApplication::translate("MainWindow", "\320\246\320\270\320\273\320\270\320\275\320\264\321\200", nullptr));
     } // retranslateUi
 
 };

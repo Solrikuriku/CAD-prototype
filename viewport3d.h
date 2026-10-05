@@ -30,6 +30,7 @@ public:
     Viewport3D(QWidget* parent = nullptr);
 
     void AddCube(float width = 0.5f, float height = 0.5f, float depth = 0.5f);
+    void AddCylinder(float radius = 0.5f, float height = 0.5f);
 
     SceneObject* PickObject(const QPointF& currentPos) const override;
     void SetPickedObject(SceneObject* picked) override;

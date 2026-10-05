@@ -13,6 +13,11 @@ MainWindow::MainWindow(QWidget *parent)
         // ui->openGLWidget->AddCube(0.5f, 0.5f, 0.5f);
     });
 
+    connect(ui->AddCylinderButton, &QPushButton::clicked, this, [this]()
+    {
+        ui->openGLWidget->AddCylinder();
+    });
+
 }
 
 MainWindow::~MainWindow()
