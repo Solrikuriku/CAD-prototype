@@ -8,7 +8,6 @@
 Основной интерфейс программы</br>
 <img width="1577" height="955" alt="изображение" src="https://github.com/user-attachments/assets/f233c19a-24fa-4f34-b7bf-895497e966a0" /></br>
 <img width="1593" height="990" alt="addcubeanimation" src="https://github.com/user-attachments/assets/d4b12ec7-6d73-42f7-93dd-31afea9d997b" /></br>
-
 На изображении представлен вьюпорт, вращение и масштабирование камеры.</br>
 Однако на данный момент задача разработки качественного UI/UX где-то на последнем месте.</br>
 
