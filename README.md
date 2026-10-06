@@ -20,7 +20,6 @@
 <img width="1593" height="990" alt="rotate" src="https://github.com/user-attachments/assets/a12eced5-ad33-4194-9849-7fff37884ea9" /></br>
 Масштабирование</br>
 <img width="1593" height="990" alt="scale" src="https://github.com/user-attachments/assets/237f8a28-b4a1-45ca-9429-85e86983d33b" /></br>
-
 Выбор объекта на экране производится с помощью метода ray casting и AABB-ray intersection. 
 
 Undo/Redo</br>
