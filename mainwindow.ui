@@ -37,36 +37,6 @@
      <string>Куб</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="objectWidth">
-    <property name="geometry">
-     <rect>
-      <x>1120</x>
-      <y>150</y>
-      <width>113</width>
-      <height>28</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="objectHeight">
-    <property name="geometry">
-     <rect>
-      <x>1120</x>
-      <y>190</y>
-      <width>113</width>
-      <height>28</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="objectDepth">
-    <property name="geometry">
-     <rect>
-      <x>1120</x>
-      <y>230</y>
-      <width>113</width>
-      <height>28</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="AddCylinderButton">
     <property name="geometry">
      <rect>
@@ -78,6 +48,177 @@
     </property>
     <property name="text">
      <string>Цилиндр</string>
+    </property>
+   </widget>
+   <widget class="QStackedWidget" name="objectType">
+    <property name="geometry">
+     <rect>
+      <x>1110</x>
+      <y>120</y>
+      <width>131</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
+    <widget class="QWidget" name="cylinder">
+     <widget class="QLineEdit" name="cylinderRadius">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>113</width>
+        <height>28</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="cylinderHeight">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>110</y>
+        <width>113</width>
+        <height>28</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelCylinderRadius">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>63</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Радиус</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelCylinderHeight">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>90</y>
+        <width>63</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Высота</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelCylinderType">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>63</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Цилиндр</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="cube">
+     <widget class="QLineEdit" name="cubeWidth">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>70</y>
+        <width>113</width>
+        <height>28</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="cubeHeight">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>113</width>
+        <height>28</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="cubeDepth">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>170</y>
+        <width>113</width>
+        <height>28</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelCubeWidth">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>63</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ширина</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelCubeHeight">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>63</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Высота</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelCubeDepth">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>150</y>
+        <width>63</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Глубина</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelCubeType">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>63</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Куб</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="ApplyButton">
+    <property name="geometry">
+     <rect>
+      <x>1119</x>
+      <y>370</y>
+      <width>121</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Добавить</string>
     </property>
    </widget>
   </widget>

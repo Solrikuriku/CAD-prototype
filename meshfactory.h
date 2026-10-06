@@ -12,7 +12,6 @@ public:
 
 private:
     static std::vector<float> GenerateVertices(const float width, const float height, const float depth);
-    //GenerateVertices for cylinder
     static std::vector<float> GenerateVertices(const float radius, const float height, const int segments);
     static std::vector<unsigned int> GenerateCylinderVerticesIndecies(const int verticesSize);
     static std::vector<unsigned int> GenerateCylinderEdgeIndices(int segments);

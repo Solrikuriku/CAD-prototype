@@ -20,11 +20,19 @@ public:
 
 private:
     Ui::MainWindow *ui;
-
     Viewport3D *viewport = nullptr;
+
+    enum ObjectType { Cube, Cylinder };
+    ObjectType objectType = Cube;
+
 
     float scale = 100;
 
-    void AddObject();
+    void AddObject(const float width, const float height, const float depth);
+    void AddObject(const float radius, const float height);
+
+    void ErrorMessage();
+    bool TestCorrectValues(ObjectType type = Cube);
 };
+
 #endif // MAINWINDOW_H
