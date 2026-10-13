@@ -27,6 +27,10 @@ Undo/Redo</br>
 Добавление другого объекта - цилиндр, и манипуляции с ними.</br>
 <img width="1593" height="990" alt="addcylinder" src="https://github.com/user-attachments/assets/1a791b21-0ae8-4a45-abd1-6da80bf8451e" /></br>
 
+UPDATE 14/10/26</br>
+<img width="1567" height="950" alt="изображение" src="https://github.com/user-attachments/assets/d0e74d55-9a3b-449f-8883-2c44265fc0ff" /></br>
+Добавлены мировые оси координат.
+
 Следующие планируемые этапы:
 1. реализация булевых операций
 2. ввод новых объектов
