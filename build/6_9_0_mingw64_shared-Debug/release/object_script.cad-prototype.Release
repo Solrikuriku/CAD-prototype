@@ -8,6 +8,7 @@ release/meshfactory.o
 release/raycasting.o
 release/rotatecommand.o
 release/scalecommand.o
+release/sceneaxes.o
 release/sceneobject.o
 release/selecthandler.o
 release/translatecommand.o

@@ -69,6 +69,8 @@ void Viewport3D::initializeGL()
     glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 
+    m_axesViewport = std::make_unique<SceneAxes>();
+
     m_program.addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSrc);
     m_program.addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSrc);
     m_program.link();
@@ -86,8 +88,8 @@ void Viewport3D::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_currentView.setToIdentity();
-    m_currentView.translate(0.0f, 0.0f, -m_cameraDistance); // сначала отодвигаем камеру
-    m_currentView.rotate(m_pitch, 1.0f, 0.0f, 0.0f);         // потом поворот вокруг X (вверх-вниз)
+    m_currentView.translate(0.0f, 0.0f, -m_cameraDistance);
+    m_currentView.rotate(m_pitch, 1.0f, 0.0f, 0.0f);
     m_currentView.rotate(m_yaw,   0.0f, 1.0f, 0.0f);
     //а это чо тут делает
 
@@ -109,35 +111,23 @@ void Viewport3D::paintGL()
         obj->Draw(); // чёрные рёбра поверх
     }
 
+    m_program.setUniformValue("mvp", m_projection * m_currentView);
+    //glDisable(GL_DEPTH_TEST);
+    m_program.setUniformValue("objectColor", QVector3D(1.0f, 0.0f, 0.0f));
+    m_axesViewport->DrawX();
+    m_program.setUniformValue("objectColor", QVector3D(0.0f, 1.0f, 0.0f));
+    m_axesViewport->DrawY();
+    m_program.setUniformValue("objectColor", QVector3D(0.0f, 0.0f, 1.0f));
+    m_axesViewport->DrawZ();
+    //glEnable(GL_DEPTH_TEST);
+
     glDisable(GL_POLYGON_OFFSET_LINE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // вернуть обратно для следующего кадра
 }
 
 void Viewport3D::mousePressEvent(QMouseEvent *event)
 {
-    // auto isAnyModeOn = (m_translate_mode == TranslateMode::Move)
-    //                    || (m_rotate_mode == RotateMode::Rotate)
-    //                    || (m_scale_mode == ScaleMode::Scale);
-
     m_rotating = false;
-
-    // if (isAnyModeOn)
-    // {
-    //     if (m_translate_mode == TranslateMode::Move)
-    //     {
-    //         if (m_historyStack) m_historyStack->ExecuteCommand(std::move(m_translateCommand));
-    //     }
-
-
-    //     m_translate_mode = TranslateMode::None;
-    //     m_rotate_mode = RotateMode::None;
-    //     m_scale_mode = ScaleMode::None;
-
-    //     m_axes = TransformAxes::None;
-    //     m_pickedObject = nullptr;
-
-    //     return;
-    // }
 
     //DRY для команд чот
     if (m_translate_mode == TranslateMode::Move)
@@ -396,6 +386,8 @@ SceneObject* Viewport3D::PickObject(const QPointF &currentPos) const
 
 void Viewport3D::SetPickedObject(SceneObject *picked)
 {
+    CancelAllSelections();
+
     if (m_pickedObject && m_pickedObject != picked)
     {
         m_pickedObject->selected = false;

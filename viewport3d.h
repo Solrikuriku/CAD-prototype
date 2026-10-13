@@ -19,6 +19,7 @@
 #include "rotatecommand.h"
 #include "scalecommand.h"
 #include "commandhistory.h"
+#include "sceneaxes.h"
 
 class Viewport3D : public QOpenGLWidget,
                    protected QOpenGLFunctions_3_3_Core,
@@ -50,6 +51,8 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
 
 private:
+    std::unique_ptr<SceneAxes> m_axesViewport;
+
     enum class TranslateMode
     {
         None,
@@ -106,8 +109,8 @@ private:
     QPointF m_lastMousePos = QPointF();        // где была мышь в прошлом событии
     QPointF m_lastDragPos = QPointF();
     QVector3D m_cursorWorldPos = QVector3D(); //позииция в 3д
-    float m_yaw = 0.0f;           // поворот вокруг вертикальной оси (влево-вправо)
-    float m_pitch = 20.0f;        // поворот вокруг горизонтальной оси (вверх-вниз), начальный наклон для вида "не в лоб"
+    float m_yaw = -60.0f;
+    float m_pitch = 25.0f;
 
 
     //СЛЕДИТЬ ЗА ВРЕМЕНЕМ ЖИЗНИ

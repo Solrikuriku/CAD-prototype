@@ -21,6 +21,7 @@ SOURCES += \
     raycasting.cpp \
     rotatecommand.cpp \
     scalecommand.cpp \
+    sceneaxes.cpp \
     sceneobject.cpp \
     selecthandler.cpp \
     translatecommand.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     raycasting.h \
     rotatecommand.h \
     scalecommand.h \
+    sceneaxes.h \
     sceneobject.h \
     selecthandler.h \
     transform.h \

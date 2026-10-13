@@ -8,6 +8,7 @@ debug/meshfactory.o
 debug/raycasting.o
 debug/rotatecommand.o
 debug/scalecommand.o
+debug/sceneaxes.o
 debug/sceneobject.o
 debug/selecthandler.o
 debug/translatecommand.o
