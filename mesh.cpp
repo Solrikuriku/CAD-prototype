@@ -15,14 +15,14 @@ Mesh::Mesh(const std::vector<float> &vertices,
 void Mesh::DrawTriangulated()
 {
     m_vao.bind();
-    m_ebo.bind(); // явно говорим, какой EBO использовать для этого вызова
+    m_ebo.bind();
     glDrawElements(GL_TRIANGLES, m_triangleIndexCount, GL_UNSIGNED_INT, nullptr);
 }
 
 void Mesh::Draw()
 {
     m_vao.bind();
-    m_edgeEbo.bind(); // переключаемся на другой EBO
+    m_edgeEbo.bind();
     glDrawElements(GL_LINES, m_edgeIndexCount, GL_UNSIGNED_INT, nullptr);
 }
 
@@ -47,8 +47,6 @@ void Mesh::SetupBuffers(const std::vector<float> &v, const std::vector<unsigned 
 
     m_vao.release();
 
-    // EBO для рёбер — заполняем отдельно, VAO этого уже не "запомнит"
-    // (переключать EBO будем вручную перед каждой отрисовкой)
     m_edgeEbo.create();
     m_edgeEbo.bind();
     m_edgeEbo.allocate(ei.data(), int(ei.size() * sizeof(unsigned int)));

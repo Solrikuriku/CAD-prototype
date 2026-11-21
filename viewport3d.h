@@ -30,8 +30,8 @@ class Viewport3D : public QOpenGLWidget,
 public:
     Viewport3D(QWidget* parent = nullptr);
 
-    void AddCube(float width = 0.5f, float height = 0.5f, float depth = 0.5f);
-    void AddCylinder(float radius = 0.2f, float height = 0.5f);
+    void AddCube(const QUuid& id, float width = 0.5f, float height = 0.5f, float depth = 0.5f);
+    void AddCylinder(const QUuid& id, float radius = 0.2f, float height = 0.5f);
 
     SceneObject* PickObject(const QPointF& currentPos) const override;
     void SetPickedObject(SceneObject* picked) override;
@@ -86,7 +86,7 @@ private:
 
     //а есть смысл в хэш с id?
     // std::vector<std::unique_ptr<SceneObject>> m_objects;
-    std::unordered_map<std::string, std::unique_ptr<SceneObject>> m_objects;
+    std::map<QUuid, std::unique_ptr<SceneObject>> m_objects;
     std::unique_ptr<SelectHandler> m_selectHandler;
 
     std::unique_ptr<TranslateCommand> m_translateCommand;

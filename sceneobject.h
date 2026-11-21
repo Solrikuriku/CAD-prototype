@@ -8,20 +8,22 @@
 class SceneObject
 {
 public:
-    SceneObject() { id = GenerateId(); };
+    //ранее генерировался тут, теперь генерируется в tree
+    //а сюда передается
+    SceneObject(const QUuid& objId) : id(objId) {};
 
-    std::string id; // генерируется всегда при создании поля
-    std::unique_ptr<Mesh> mesh;     // unique_ptr и так nullptr по умолчанию
-    Transform transform = Transform();            // Transform() и так вызывается по умолчанию
+    QUuid id;
+    std::unique_ptr<Mesh> mesh;
+    Transform transform = Transform();
     bool selected = false;
 
     void Draw();
     void DrawTriangulated();
 
-private:
-    static std::string GenerateId()
-    {
-        return QUuid::createUuid().toString().toStdString();
-    }
+// private:
+//     static std::string GenerateId()
+//     {
+//         return QUuid::createUuid().toString().toStdString();
+//     }
 };
 

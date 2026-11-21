@@ -49,6 +49,20 @@ struct AABB
     }
 };
 
+struct Triangle
+{
+    QVector3D v0, v1, v2;
+    QVector3D faceNormal;
+
+    void CalculateFaceNormal()
+    {
+        QVector3D edge1 = v1 - v0;
+        QVector3D edge2 = v2 - v0;
+
+        faceNormal = QVector3D::crossProduct(edge1, edge2).normalized();
+    }
+};
+
 inline float AngleBetweenVectors(const QVector3D& last, const QVector3D& current, const QVector3D& objectCenter, const QVector3D& referenceNormal)
 {
     QVector3D lastDir = (last - objectCenter).normalized();
@@ -57,28 +71,13 @@ inline float AngleBetweenVectors(const QVector3D& last, const QVector3D& current
     QVector3D axis = QVector3D::crossProduct(lastDir, currentDir);
     float cosAngle = QVector3D::dotProduct(lastDir, currentDir);
 
-    // Возвращаем вашу длину, она гарантирует, что значение синуса не нулевое
     float sinAngle = axis.length();
 
-    // ВНИМАНИЕ: Проверьте, что передается в referenceNormal!
-    // Если знак всегда положительный, замените referenceNormal на нужную ось (например, QVector3D(0, 1, 0))
     if (QVector3D::dotProduct(axis, referenceNormal) < 0.0f) {
         sinAngle = -sinAngle;
     }
 
     float angleRad = std::atan2(sinAngle, cosAngle);
 
-    //qDebug() << "текущий угол " << angleRad;
-
     return qRadiansToDegrees(angleRad);
-
-    // float cosAngle = std::clamp(QVector3D::dotProduct(lastDir, currentDir), -1.0f, 1.0f);
-    // float angleDegrees = qRadiansToDegrees(std::acos(cosAngle));
-
-    // QVector3D axis = QVector3D::crossProduct(lastDir, currentDir);
-
-    // if (QVector3D::dotProduct(axis, referenceNormal) < 0)
-    //     angleDegrees = -angleDegrees;
-
-    // return angleDegrees;
 }

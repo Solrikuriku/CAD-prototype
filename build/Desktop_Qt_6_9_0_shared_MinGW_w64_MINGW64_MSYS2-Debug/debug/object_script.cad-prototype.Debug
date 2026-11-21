@@ -1,0 +1,17 @@
+debug/commandhistory.o
+debug/gizmocommand.o
+debug/iviewportcontext.o
+debug/main.o
+debug/mainwindow.o
+debug/mesh.o
+debug/meshfactory.o
+debug/raycasting.o
+debug/rotatecommand.o
+debug/scalecommand.o
+debug/sceneaxes.o
+debug/sceneobject.o
+debug/selecthandler.o
+debug/translatecommand.o
+debug/viewport3d.o
+debug/moc_mainwindow.o
+debug/moc_viewport3d.o

@@ -36,26 +36,24 @@ Viewport3D::Viewport3D(QWidget *parent)
     m_historyStack = std::make_unique<CommandHistory>();
 }
 
-void Viewport3D::AddCube(float width, float height, float depth)
+void Viewport3D::AddCube(const QUuid& id, float width, float height, float depth)
 {
     makeCurrent();
-    auto newObject = std::make_unique<SceneObject>();
+    auto newObject = std::make_unique<SceneObject>(id);
     newObject->mesh = MeshFactory::CreateCube(width, height, depth);
 
-    auto id = newObject->id; // ОБЯЗАТЕЛЬНО сохраняем id В ОТДЕЛЬНУЮ переменную ДО move
-    m_objects.emplace(id, std::move(newObject)); // теперь move происходит для уже сохранённого id
+    m_objects.emplace(id, std::move(newObject));
 
     doneCurrent();
     update();
 }
 
-void Viewport3D::AddCylinder(float radius, float height)
+void Viewport3D::AddCylinder(const QUuid& id, float radius, float height)
 {
     makeCurrent();
-    auto newObject = std::make_unique<SceneObject>();
+    auto newObject = std::make_unique<SceneObject>(id);
     newObject->mesh = MeshFactory::CreateCylinder(radius, height);
 
-    auto id = newObject->id;
     m_objects.emplace(id, std::move(newObject));
 
     doneCurrent();
