@@ -49,6 +49,12 @@ struct AABB
     }
 };
 
+struct Face
+{
+    std::vector<uint32_t> loop;
+    std::vector<uint32_t> triangles;
+};
+
 struct Triangle
 {
     QVector3D v0, v1, v2;

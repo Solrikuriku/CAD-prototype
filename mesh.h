@@ -19,6 +19,7 @@ public:
     void Draw();
 
     AABB bounds;
+    std::vector<Face> faces;
 
 private:
     QOpenGLVertexArrayObject m_vao;

@@ -23,9 +23,11 @@ static const std::vector<uint32_t> CUBE_EDGE_INDICES =
 std::unique_ptr<Mesh> MeshFactory::CreateCube(const float width, const float height, const float depth)
 {
     auto vertices = GenerateVertices(width, height, depth);
+    auto faces = GenerateFaces(CUBE_INDICES);
     AABB bounds = AABB::GetBounds(vertices);
     auto mesh = std::make_unique<Mesh>(vertices, CUBE_INDICES, CUBE_EDGE_INDICES);
     mesh->bounds = bounds;
+    mesh->faces = faces;
 
     return mesh;
 }
@@ -183,5 +185,48 @@ std::vector<unsigned int> MeshFactory::GenerateCylinderEdgeIndices(int segments)
     }
 
     return edges;
+}
+
+std::vector<Face> MeshFactory::GenerateFaces(const std::vector<uint32_t> &indicies)
+{
+    std::vector<Face> faces;
+
+    //у нас серия из 6 индексов
+    unsigned int n = 1;
+
+    std::vector<uint32_t> loop;
+    std::vector<uint32_t> triangles;
+
+    for (size_t i = 0; i < indicies.size(); i++)
+    {
+        uint32_t index = indicies[i];
+        bool hasElement = std::find(loop.begin(), loop.end(), index) != loop.end();
+
+        //проверяем наличие той или иной цифры
+        if (!hasElement)
+        {
+            loop.push_back(index);
+        }
+
+        triangles.push_back(index);
+
+        //цикл накопления заново
+        if (n == 6)
+        {
+            qDebug() << "_______________________";
+            qDebug() << loop;
+            qDebug() << triangles;
+            qDebug() << "_______________________";
+
+            faces.push_back({ loop, triangles });
+            loop.clear(); triangles.clear();
+            n = 1;
+            continue;
+        }
+
+        n++;
+    }
+
+    return faces;
 }
 
